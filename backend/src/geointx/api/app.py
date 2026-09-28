@@ -19,6 +19,7 @@ from geointx import evidence
 from geointx.agent import loop as agent_loop
 from geointx.agent.strategy import StrategyName
 from geointx.ai import assistant
+from geointx.ai.client import STATUS as llm_status
 from geointx.ai.client import LlmClient, build_client
 from geointx.ai.interpret import interpret
 from geointx.ai.tools import NoArgs, Tools
@@ -270,6 +271,7 @@ def _register(app: FastAPI) -> None:
                 "provider": "gemini" if STATE.llm else None,
                 "model": STATE.llm.model if STATE.llm else None,
                 "fallback": "deterministic templates",
+                "status": llm_status["status"],
             },
             "algorithm": "rule-v1.0 (heuristic, indicative)",
             "identity": "demo role switcher (not authentication)",
