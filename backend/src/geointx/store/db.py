@@ -9,7 +9,6 @@ from typing import Any
 
 from sqlalchemy import JSON, Column, LargeBinary, event
 from sqlalchemy.engine import Engine
-from sqlalchemy.pool import NullPool
 from sqlmodel import Field, Session, SQLModel, create_engine
 
 
@@ -170,13 +169,16 @@ def make_engine(url: str) -> Engine:
             cur.close()
 
     else:
-        # Serverless: short-lived instances, so no long-lived pool; pre-ping drops
-        # connections the (pooled) Postgres endpoint has closed.
+        # Small pool: warm serverless instances (Fluid compute) reuse connections
+        # instead of paying TLS + auth per request; pre-ping and recycle drop
+        # connections the provider's pooler has closed.
         # prepare_threshold=None: transaction-mode poolers (Supabase :6543, PgBouncer)
         # cannot hold server-side prepared statements across transactions.
         engine = create_engine(
             url,
-            poolclass=NullPool,
+            pool_size=2,
+            max_overflow=3,
+            pool_recycle=240,
             pool_pre_ping=True,
             connect_args={"prepare_threshold": None},
         )
