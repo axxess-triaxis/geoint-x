@@ -46,11 +46,31 @@ class Settings(BaseSettings):
         return f"sqlite:///{(self.var_dir / 'geointx.db').as_posix()}"
 
 
+# Connection parameters libpq understands. Hosted providers append their own
+# (Supabase's Vercel integration adds "supa=base-pooler.x"), which libpq rejects
+# with "invalid connection option".
+LIBPQ_PARAMS = {
+    "sslmode",
+    "sslrootcert",
+    "sslcert",
+    "sslkey",
+    "connect_timeout",
+    "application_name",
+    "options",
+    "target_session_attrs",
+    "channel_binding",
+}
+
+
 def normalise_db_url(url: str) -> str:
-    """Use the psycopg 3 driver for postgres URLs (Neon/Vercel give postgres://)."""
+    """psycopg 3 driver for postgres URLs, keeping only libpq query parameters."""
+    from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
     for prefix in ("postgres://", "postgresql://"):
         if url.startswith(prefix):
-            return "postgresql+psycopg://" + url[len(prefix) :]
+            parts = urlsplit("postgresql+psycopg://" + url[len(prefix) :])
+            query = [(k, v) for k, v in parse_qsl(parts.query) if k in LIBPQ_PARAMS]
+            return urlunsplit(parts._replace(query=urlencode(query)))
     return url
 
 

@@ -172,7 +172,14 @@ def make_engine(url: str) -> Engine:
     else:
         # Serverless: short-lived instances, so no long-lived pool; pre-ping drops
         # connections the (pooled) Postgres endpoint has closed.
-        engine = create_engine(url, poolclass=NullPool, pool_pre_ping=True)
+        # prepare_threshold=None: transaction-mode poolers (Supabase :6543, PgBouncer)
+        # cannot hold server-side prepared statements across transactions.
+        engine = create_engine(
+            url,
+            poolclass=NullPool,
+            pool_pre_ping=True,
+            connect_args={"prepare_threshold": None},
+        )
     SQLModel.metadata.create_all(engine)
     return engine
 
