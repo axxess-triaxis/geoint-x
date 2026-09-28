@@ -97,6 +97,19 @@ template text is used and labelled as such.
 To rebuild the demo pack from live sources (about 15 minutes):
 `uv run python ../scripts/build_demo_pack.py`.
 
+## Live deployment
+
+https://geoint-x.vercel.app. It runs as a Vercel Python function with Root Directory `backend`,
+region `syd1`, and Large Functions on.
+- **Entrypoint:** `backend/server.py`.
+- **Build step:** `backend/vercel_build.py` does three things:
+  - bundles the hash-verified demo pack;
+  - builds the dashboard;
+  - vendors the system libraries the GDAL wheel expects.
+- **State:** stored in the attached Postgres (Supabase) through `POSTGRES_URL`.
+- **Evidence images:** not stored. They are regenerated from the source imagery and served only
+  if they match the SHA-256 recorded at detection time.
+
 ## Demo script (about 5 minutes)
 
 1. **Change detection** → *Deepor Beel*. Step through the 2020–2026 imagery timeline, then
