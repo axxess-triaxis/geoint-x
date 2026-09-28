@@ -1,8 +1,8 @@
 """Vercel build step (``[tool.vercel.scripts] build``), run from ``backend/``.
 
 1. Copies the demo-pack metadata (manifest, catalogues, boundaries, districts)
-   from ``../data/demo_pack`` into ``_bundle/demo_pack``. Rasters are excluded:
-   they are fetched at runtime from the GitHub release (bundle size budget).
+   from ``../data/demo_pack`` into ``_bundle/demo_pack`` and downloads the
+   rasters from the GitHub release into it (hash-verified).
 2. Builds the dashboard (``../frontend``) and copies ``dist`` to ``_bundle/frontend``.
 Fails loudly if either input is missing, rather than deploying a half-working app.
 """
@@ -109,8 +109,27 @@ def vendor_system_libs() -> None:
     print(f"vercel_build: vendored system libs: {sorted(copied) or 'none'}")
 
 
+def bundle_rasters() -> None:
+    """Download and hash-verify the demo-pack rasters into the function bundle.
+
+    The runtime /tmp is too small for them ("No space left on device"), so they
+    ship read-only with the function. Together with the scientific stack this
+    exceeds the standard 500 MB Python bundle, which Vercel serves through
+    Large Functions (up to 5 GB; on by default for new projects, otherwise set
+    VERCEL_SUPPORT_LARGE_FUNCTIONS=1).
+    """
+    sys.path.insert(0, str(HERE / "src"))
+    from geointx.imagery.pack import DemoPack
+    from geointx.imagery.release_fetch import fetch_rasters
+
+    fetch_rasters(DemoPack(BUNDLE / "demo_pack"))
+    size = sum(p.stat().st_size for p in (BUNDLE / "demo_pack").rglob("*.tif"))
+    print(f"vercel_build: bundled and verified rasters ({size / 1e6:.1f} MB)")
+
+
 if __name__ == "__main__":
     BUNDLE.mkdir(exist_ok=True)
     copy_pack_metadata()
+    bundle_rasters()
     vendor_system_libs()
     build_frontend()

@@ -1,9 +1,10 @@
 """Vercel (serverless) entrypoint: exposes the FastAPI instance as ``app``.
 
 On Vercel the build step (``vercel_build.py``) places the dashboard build and the
-demo-pack metadata in ``_bundle/``. At runtime only ``/tmp`` is writable, so the
-pack metadata is copied there and the ~200 MB of rasters are streamed from the
-GitHub release on first use and hash-verified (they exceed the bundle budget).
+hash-verified demo pack (metadata and ~200 MB of rasters) in ``_bundle/``; the
+pack is read in place. Only small runtime state goes to ``/tmp`` (the only
+writable path). Fallback when rasters are not bundled: copy metadata to ``/tmp``
+and stream rasters from the GitHub release on first use.
 
 If initialisation fails, the app still boots and every request returns HTTP 503
 with the error type and message, so a failed deployment explains itself instead
@@ -65,6 +66,16 @@ def _settings():  # type: ignore[no-untyped-def]
     if not (BUNDLE.exists() or ON_VERCEL):
         return None  # plain local run: normal defaults
     var = Path(os.environ.get("GEOINTX_VAR_DIR", "/tmp/geointx"))
+    bundled = BUNDLE / "demo_pack"
+    if any(bundled.glob("*/scenes/*.tif")):
+        # Rasters shipped read-only in the bundle (the normal Vercel path).
+        return Settings(
+            pack_dir=bundled,
+            var_dir=var,
+            frontend_dist=BUNDLE / "frontend",
+            gemini_api_key=os.environ.get("GEMINI_API_KEY")
+            or os.environ.get("GEOINTX_GEMINI_API_KEY"),
+        )
     pack = var / "pack"
     if not (pack / "manifest.json").exists():
         src = BUNDLE / "demo_pack"
