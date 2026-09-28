@@ -92,7 +92,7 @@ export default function App() {
           <NavLink to="/agent"><Icon.agent />Monitoring agent</NavLink>
           <NavLink to="/analytics"><Icon.chart />Analytics</NavLink>
           <div className="foot">
-            Working name. Prototype for NESFIC-D-21 and NESFIC-D-17.
+            Prototype for NESFIC-D-21 and NESFIC-D-17.
             <br />
             AI flags suspected change; officials decide.
           </div>
