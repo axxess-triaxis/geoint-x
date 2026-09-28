@@ -1,4 +1,4 @@
-# GEOINT-X (working name)
+# GEOINT-X
 
 **Geospatial change intelligence for Assam.** One engine, two government challenge statements of
 the North-East SEVA FIRST Innovation Challenge 2026:
