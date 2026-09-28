@@ -40,8 +40,12 @@ real change*, because there is no labelled ground truth.
 hashed and audited. No sensor integration exists.
 
 **Deployment.**
-- SQLite on a container's ephemeral disk resets on restart. That is acceptable for a demo; a
-  deployment would need a persistent database, for example Postgres/PostGIS.
+- The live Vercel deployment keeps state in Postgres. Local runs and the Docker image use SQLite,
+  which resets when the container restarts.
+- Detection on Vercel takes about 30 s per area (Majuli about 95 s, run as a single request under
+  the 300 s function limit). Case and event inserts are not batched yet.
+- Record ids (RUN-/CASE-) are assigned by counting rows, so two detections started at the same
+  moment could collide.
 - OSM standard tiles are not for production traffic.
 - The Gemini free tier is rate-limited. Without a key, template text is used and labelled.
 
