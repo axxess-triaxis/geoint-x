@@ -15,6 +15,7 @@ from pydantic import BaseModel
 from sqlalchemy.engine import Engine
 from sqlmodel import Session, select
 
+from geointx import evidence
 from geointx.agent import loop as agent_loop
 from geointx.agent.strategy import StrategyName
 from geointx.ai import assistant
@@ -47,10 +48,14 @@ from geointx.store.db import (
     PolygonRow,
     RunRow,
     SchedulerDecisionRow,
+    UploadBlobRow,
     make_engine,
 )
 
 log = logging.getLogger("geointx")
+
+# Vercel caps request bodies at 4.5 MB.
+MAX_UPLOAD_BYTES = 4 * 1024 * 1024
 
 
 class State:
@@ -95,13 +100,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     # A route, not a StaticFiles mount: evidence is generated at runtime, so it must
     # never be treated as build-time static content (e.g. promoted to a CDN).
+    # Files are a cache: missing evidence is regenerated from the source imagery and
+    # served only if it matches the SHA-256 recorded when the run was made.
     @app.get("/artifacts/{run_id}/{name}", include_in_schema=False)
-    def artifact(run_id: str, name: str) -> FileResponse:
-        root = s.artifact_dir.resolve()
-        p = (root / run_id / name).resolve()
-        if root not in p.parents or not p.is_file():
+    def artifact(run_id: str, name: str) -> Response:
+        if "/" in name or "\\" in name or ".." in name or not name.endswith(".png"):
             raise HTTPException(404)
-        return FileResponse(p, headers={"Cache-Control": "public, max-age=31536000, immutable"})
+        try:
+            data = evidence_bytes(run_id, name)
+        except evidence.EvidenceUnavailable as e:
+            raise HTTPException(404) from e
+        except evidence.EvidenceMismatch as e:
+            log.error("evidence integrity failure: %s", e)
+            raise HTTPException(500, "evidence failed its integrity check") from e
+        return Response(
+            data,
+            media_type="image/png",
+            headers={"Cache-Control": "public, max-age=31536000, immutable"},
+        )
 
     _register(app)
     if s.frontend_dist.exists():
@@ -143,6 +159,23 @@ def actor(
 
 
 ActorDep = Annotated[Actor, Depends(actor)]
+
+
+def evidence_bytes(run_id: str, name: str) -> bytes:
+    with Session(STATE.engine) as ses:
+        run = ses.get(RunRow, run_id)
+        if run is None:
+            raise evidence.EvidenceUnavailable(run_id)
+        fid = name.split("_", 1)[0] if "_" in name else None
+        frow = ses.get(FindingRow, fid) if fid else None
+        aoi = ses.get(AoiRow, run.aoi_id)
+        assert aoi is not None
+        run_d = run.model_dump(mode="json")
+        grid = GridSpec.from_dict(aoi.grid)
+        finding_d = None if frow is None else frow.payload
+    return evidence.get_evidence(
+        STATE.pack, STATE.settings.artifact_dir, run_d, grid, name, finding_d
+    )
 
 
 def _finding(ses: Session, finding_id: str) -> Finding:
@@ -517,13 +550,24 @@ def _register(app: FastAPI) -> None:
         kind: Annotated[str, Form()] = "attachment",
     ) -> dict[str, Any]:
         data = await file.read()
-        if len(data) > 10 * 1024 * 1024:
-            raise HTTPException(413, "file too large (10 MB max)")
+        if len(data) > MAX_UPLOAD_BYTES:
+            raise HTTPException(413, "file too large (4 MB max)")
         sha = hashlib.sha256(data).hexdigest()
         safe = "".join(ch for ch in (file.filename or "upload") if ch.isalnum() or ch in "._-")[:80]
-        dest = STATE.settings.upload_dir / case_id / f"{sha[:12]}_{safe}"
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(data)
+        stored = f"{sha[:12]}_{safe}"
+        with Session(STATE.engine) as ses:
+            _case(ses, case_id)
+            # Stored in the database so field evidence survives serverless instances.
+            ses.merge(
+                UploadBlobRow(
+                    key=f"{case_id}/{stored}",
+                    case_id=case_id,
+                    content_type=file.content_type or "application/octet-stream",
+                    sha256=sha,
+                    data=data,
+                )
+            )
+            ses.commit()
         try:
             c = apply_case_action(
                 STATE.engine,
@@ -537,7 +581,7 @@ def _register(app: FastAPI) -> None:
                     "sha256": sha,
                     "bytes": len(data),
                     "kind": "field_note" if kind == "field_note" else "attachment",
-                    "uri": f"/api/uploads/{case_id}/{dest.name}",
+                    "uri": f"/api/uploads/{case_id}/{stored}",
                 },
             )
         except workflow.WorkflowError as e:
@@ -545,11 +589,18 @@ def _register(app: FastAPI) -> None:
         return c.model_dump(mode="json")
 
     @app.get("/api/uploads/{case_id}/{name}")
-    def get_upload(case_id: str, name: str) -> FileResponse:
-        p = (STATE.settings.upload_dir / case_id / name).resolve()
-        if STATE.settings.upload_dir.resolve() not in p.parents or not p.is_file():
+    def get_upload(case_id: str, name: str, ses: SessionDep) -> Response:
+        row = ses.get(UploadBlobRow, f"{case_id}/{name}")
+        if row is None:
             raise HTTPException(404)
-        return FileResponse(p)
+        return Response(
+            row.data,
+            media_type=row.content_type,
+            headers={
+                "Content-Disposition": f'attachment; filename="{name}"',
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
 
     @app.post("/api/cases/{case_id}/interpret")
     def interpret_case(case_id: str, who: ActorDep) -> dict[str, Any]:
@@ -575,9 +626,11 @@ def _register(app: FastAPI) -> None:
                 and e.uri
                 and e.uri.startswith("/artifacts/")
             ):
-                p = STATE.settings.artifact_dir / e.uri.removeprefix("/artifacts/")
-                if p.is_file():
-                    images.append((p.read_bytes(), "image/png"))
+                run_id, _, name = e.uri.removeprefix("/artifacts/").partition("/")
+                try:
+                    images.append((evidence_bytes(run_id, name), "image/png"))
+                except (evidence.EvidenceUnavailable, evidence.EvidenceMismatch):
+                    log.warning("evidence image %s unavailable for interpretation", e.uri)
         interp, meta_ = interpret(f, pr, STATE.llm, cache_get, cache_set, images or None)
         with Session(STATE.engine) as ses:
             c = _case(ses, case_id)

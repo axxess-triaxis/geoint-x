@@ -86,14 +86,43 @@ def overlay(base: NDArray[np.uint8], rgba: NDArray[np.uint8]) -> NDArray[np.uint
     return (base * (1 - a) + rgba[..., :3] * a).astype(np.uint8)
 
 
-def write_png(arr: NDArray[np.uint8], path: Path, upscale: int = 1) -> str:
-    """Write PNG and return its sha256 (hex)."""
+CROP_UPSCALE = 3
+
+
+def finding_crops(
+    tc1: NDArray[np.uint8], tc2: NDArray[np.uint8], mask: NDArray[np.bool_]
+) -> list[tuple[str, NDArray[np.uint8], str, str]]:
+    """(evidence kind, image, file stem, description) for one finding's crops.
+
+    Shared by detection and by on-demand regeneration, so both produce
+    byte-identical evidence.
+    """
+    r0, r1, c0, c1 = crop_window(mask)
+    outline = region_outline_rgba(mask[r0:r1, c0:c1])
+    return [
+        ("image_before", tc1[r0:r1, c0:c1], "before", "T1 true colour (crop)"),
+        ("image_after", tc2[r0:r1, c0:c1], "after", "T2 true colour (crop)"),
+        (
+            "change_mask",
+            overlay(tc2[r0:r1, c0:c1], outline),
+            "mask",
+            "Detected region outlined on T2",
+        ),
+    ]
+
+
+def encode_png(arr: NDArray[np.uint8], upscale: int = 1) -> bytes:
     img = Image.fromarray(arr)
     if upscale > 1:
         img = img.resize((img.width * upscale, img.height * upscale), Image.Resampling.NEAREST)
     buf = io.BytesIO()
     img.save(buf, format="PNG", optimize=True)
-    data = buf.getvalue()
+    return buf.getvalue()
+
+
+def write_png(arr: NDArray[np.uint8], path: Path, upscale: int = 1) -> str:
+    """Write PNG and return its sha256 (hex)."""
+    data = encode_png(arr, upscale)
     path.parent.mkdir(parents=True, exist_ok=True)
     # Atomic write: a concurrent reader never sees a partially written file.
     tmp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")

@@ -7,8 +7,9 @@ from contextlib import contextmanager
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import JSON, Column, event
+from sqlalchemy import JSON, Column, LargeBinary, event
 from sqlalchemy.engine import Engine
+from sqlalchemy.pool import NullPool
 from sqlmodel import Field, Session, SQLModel, create_engine
 
 
@@ -145,16 +146,33 @@ class AiCacheRow(SQLModel, table=True):
     created_at: datetime = Field(default_factory=utcnow)
 
 
+class UploadBlobRow(SQLModel, table=True):
+    """Field evidence files, kept in the database so they survive serverless instances."""
+
+    __tablename__ = "upload_blob"
+    key: str = Field(primary_key=True)  # "<case_id>/<sha12>_<name>"
+    case_id: str = Field(index=True)
+    content_type: str
+    sha256: str
+    data: bytes = Field(sa_column=Column(LargeBinary, nullable=False))
+    created_at: datetime = Field(default_factory=utcnow)
+
+
 def make_engine(url: str) -> Engine:
-    engine = create_engine(url, connect_args={"check_same_thread": False})
+    if url.startswith("sqlite"):
+        engine = create_engine(url, connect_args={"check_same_thread": False})
 
-    @event.listens_for(engine, "connect")
-    def _fk(dbapi_conn: Any, _: Any) -> None:
-        cur = dbapi_conn.cursor()
-        cur.execute("PRAGMA foreign_keys=ON")
-        cur.execute("PRAGMA journal_mode=WAL")
-        cur.close()
+        @event.listens_for(engine, "connect")
+        def _fk(dbapi_conn: Any, _: Any) -> None:
+            cur = dbapi_conn.cursor()
+            cur.execute("PRAGMA foreign_keys=ON")
+            cur.execute("PRAGMA journal_mode=WAL")
+            cur.close()
 
+    else:
+        # Serverless: short-lived instances, so no long-lived pool; pre-ping drops
+        # connections the (pooled) Postgres endpoint has closed.
+        engine = create_engine(url, poolclass=NullPool, pool_pre_ping=True)
     SQLModel.metadata.create_all(engine)
     return engine
 

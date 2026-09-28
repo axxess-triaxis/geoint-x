@@ -277,3 +277,80 @@ def test_rerun_over_same_change_reobserves_instead_of_duplicating(client: TestCl
     detail = client.get(f"/api/cases/{first['case_ids'][0]}").json()
     assert [e["action"] for e in detail["events"]] == ["created", "re_observed"]
     assert detail["audit_chain"]["ok"]
+
+
+def test_evidence_is_regenerated_and_hash_verified(client: TestClient, tmp_path: Path) -> None:
+    import hashlib
+    import shutil
+
+    from geointx.api.app import STATE
+    from geointx.store.db import FindingRow
+
+    run = client.post(
+        "/api/runs", json={"aoi_id": "aoi1", "t1_scene_id": "S1", "t2_scene_id": "S2"}
+    ).json()
+    case_id = run["case_ids"][0]
+    finding = client.get(f"/api/cases/{case_id}").json()["finding"]
+    items = [e for e in finding["evidence"] if e["uri"] and e["uri"].startswith("/artifacts/")]
+    items += run["run"]["artifacts"]
+    original = {e["uri"]: client.get(e["uri"]).content for e in items}
+
+    # Fresh instance: no cached files. Every image is rebuilt from source imagery,
+    # byte-identical, and matches the SHA-256 recorded at detection time.
+    shutil.rmtree(STATE.settings.artifact_dir)
+    for e in items:
+        r = client.get(e["uri"])
+        assert r.status_code == 200 and r.headers["content-type"] == "image/png"
+        assert r.content == original[e["uri"]]
+        assert hashlib.sha256(r.content).hexdigest() == e["sha256"]
+
+    # A corrupted cache file is ignored, not served.
+    crop = next(e for e in items if e["uri"].endswith("_before.png"))
+    cached = STATE.settings.artifact_dir / crop["uri"].removeprefix("/artifacts/")
+    cached.write_bytes(b"not the evidence")
+    assert hashlib.sha256(client.get(crop["uri"]).content).hexdigest() == crop["sha256"]
+
+    # If the record itself is altered (geometry changed), regeneration no longer
+    # matches the recorded hash and the image is refused.
+    shutil.rmtree(STATE.settings.artifact_dir)
+    from sqlmodel import Session
+
+    with Session(STATE.engine) as ses:
+        row = ses.get(FindingRow, finding["id"])
+        assert row is not None
+        payload = dict(row.payload)
+        ring = payload["geometry"]["coordinates"][0]
+        payload["geometry"] = {
+            "type": "Polygon",
+            "coordinates": [[[x + 0.001, y] for x, y in ring]],
+        }
+        row.payload = payload
+        ses.add(row)
+        ses.commit()
+    outlined = next(e for e in items if e["uri"].endswith("_mask.png"))
+    assert client.get(outlined["uri"]).status_code == 500
+    assert client.get("/artifacts/RUN-0001/../../secret.png").status_code == 404
+
+
+def test_uploads_are_stored_in_database(client: TestClient) -> None:
+    run = client.post(
+        "/api/runs", json={"aoi_id": "aoi1", "t1_scene_id": "S1", "t2_scene_id": "S2"}
+    ).json()
+    case_id = run["case_ids"][0]
+    r = client.post(
+        f"/api/cases/{case_id}/attachments",
+        files={"file": ("site photo.jpg", b"\xff\xd8photo-bytes", "image/jpeg")},
+        data={"note": "Field visit", "kind": "field_note"},
+        headers=REVIEWER,
+    )
+    assert r.status_code == 200
+    ev = client.get(f"/api/cases/{case_id}").json()["events"][-1]
+    assert ev["action"] == "attach"
+    got = client.get(ev["payload"]["uri"])
+    assert got.status_code == 200 and got.content == b"\xff\xd8photo-bytes"
+    too_big = client.post(
+        f"/api/cases/{case_id}/attachments",
+        files={"file": ("big.bin", b"0" * (4 * 1024 * 1024 + 1), "application/octet-stream")},
+        headers=REVIEWER,
+    )
+    assert too_big.status_code == 413

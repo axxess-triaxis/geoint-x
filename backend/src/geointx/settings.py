@@ -36,10 +36,22 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> str:
-        if self.db_url:
-            return self.db_url
+        """GEOINTX_DB_URL, else a hosted Postgres URL (Vercel/Neon), else local SQLite."""
+        import os
+
+        url = self.db_url or os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
+        if url:
+            return normalise_db_url(url)
         self.var_dir.mkdir(parents=True, exist_ok=True)
         return f"sqlite:///{(self.var_dir / 'geointx.db').as_posix()}"
+
+
+def normalise_db_url(url: str) -> str:
+    """Use the psycopg 3 driver for postgres URLs (Neon/Vercel give postgres://)."""
+    for prefix in ("postgres://", "postgresql://"):
+        if url.startswith(prefix):
+            return "postgresql+psycopg://" + url[len(prefix) :]
+    return url
 
 
 @lru_cache(maxsize=1)
