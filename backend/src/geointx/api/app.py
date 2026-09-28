@@ -8,7 +8,7 @@ import threading
 from datetime import UTC, datetime
 from typing import Annotated, Any
 
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -82,6 +82,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     s.upload_dir.mkdir(parents=True, exist_ok=True)
 
     app = FastAPI(title="GEOINT-X", version="0.1.0")
+
+    @app.exception_handler(Exception)
+    async def unhandled(_: Request, exc: Exception) -> JSONResponse:
+        # Operators (and serverless deployments without log access) see what failed;
+        # no traceback or request data is returned.
+        log.exception("unhandled error")
+        return JSONResponse(
+            {"detail": "internal error", "error": f"{type(exc).__name__}: {exc}"[:400]},
+            status_code=500,
+        )
 
     # A route, not a StaticFiles mount: evidence is generated at runtime, so it must
     # never be treated as build-time static content (e.g. promoted to a CDN).
