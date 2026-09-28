@@ -1,0 +1,202 @@
+{
+ "round_robin": {
+  "2020": {
+   "usable_analyses": 11,
+   "attempts": 53,
+   "usable_share": 0.20754716981132076,
+   "mean_staleness_days": 83.84276729559748,
+   "worst_staleness_days": 246,
+   "coverage_evenness": 0.8962962962962963
+  },
+  "2021": {
+   "usable_analyses": 15,
+   "attempts": 53,
+   "usable_share": 0.2830188679245283,
+   "mean_staleness_days": 75.41509433962264,
+   "worst_staleness_days": 227,
+   "coverage_evenness": 0.974025974025974
+  },
+  "2022": {
+   "usable_analyses": 5,
+   "attempts": 6,
+   "usable_share": 0.8333333333333334,
+   "mean_staleness_days": 156.08805031446542,
+   "worst_staleness_days": 366,
+   "coverage_evenness": 0.9259259259259259
+  },
+  "2023": {
+   "usable_analyses": 19,
+   "attempts": 53,
+   "usable_share": 0.3584905660377358,
+   "mean_staleness_days": 66.9245283018868,
+   "worst_staleness_days": 240,
+   "coverage_evenness": 0.978319783197832
+  },
+  "2024": {
+   "usable_analyses": 17,
+   "attempts": 53,
+   "usable_share": 0.32075471698113206,
+   "mean_staleness_days": 66.30188679245283,
+   "worst_staleness_days": 227,
+   "coverage_evenness": 0.9537953795379538
+  },
+  "2025": {
+   "usable_analyses": 18,
+   "attempts": 53,
+   "usable_share": 0.33962264150943394,
+   "mean_staleness_days": 84.52201257861635,
+   "worst_staleness_days": 288,
+   "coverage_evenness": 0.9473684210526315
+  }
+ },
+ "clearest_scene": {
+  "2020": {
+   "usable_analyses": 22,
+   "attempts": 53,
+   "usable_share": 0.41509433962264153,
+   "mean_staleness_days": 73.80503144654088,
+   "worst_staleness_days": 233,
+   "coverage_evenness": 0.9958847736625515
+  },
+  "2021": {
+   "usable_analyses": 26,
+   "attempts": 53,
+   "usable_share": 0.49056603773584906,
+   "mean_staleness_days": 55.23270440251572,
+   "worst_staleness_days": 211,
+   "coverage_evenness": 0.9629629629629629
+  },
+  "2022": {
+   "usable_analyses": 5,
+   "attempts": 6,
+   "usable_share": 0.8333333333333334,
+   "mean_staleness_days": 168.66037735849056,
+   "worst_staleness_days": 394,
+   "coverage_evenness": 0.49019607843137253
+  },
+  "2023": {
+   "usable_analyses": 28,
+   "attempts": 53,
+   "usable_share": 0.5283018867924528,
+   "mean_staleness_days": 39.471698113207545,
+   "worst_staleness_days": 151,
+   "coverage_evenness": 0.9607843137254902
+  },
+  "2024": {
+   "usable_analyses": 21,
+   "attempts": 53,
+   "usable_share": 0.39622641509433965,
+   "mean_staleness_days": 64.062893081761,
+   "worst_staleness_days": 211,
+   "coverage_evenness": 0.8497109826589595
+  },
+  "2025": {
+   "usable_analyses": 23,
+   "attempts": 53,
+   "usable_share": 0.4339622641509434,
+   "mean_staleness_days": 74.90566037735849,
+   "worst_staleness_days": 253,
+   "coverage_evenness": 0.9329805996472663
+  }
+ },
+ "marginal_value": {
+  "2020": {
+   "usable_analyses": 21,
+   "attempts": 53,
+   "usable_share": 0.39622641509433965,
+   "mean_staleness_days": 68.80503144654088,
+   "worst_staleness_days": 228,
+   "coverage_evenness": 0.9865771812080537
+  },
+  "2021": {
+   "usable_analyses": 26,
+   "attempts": 53,
+   "usable_share": 0.49056603773584906,
+   "mean_staleness_days": 50.943396226415096,
+   "worst_staleness_days": 193,
+   "coverage_evenness": 0.9883040935672515
+  },
+  "2022": {
+   "usable_analyses": 5,
+   "attempts": 6,
+   "usable_share": 0.8333333333333334,
+   "mean_staleness_days": 156.52830188679246,
+   "worst_staleness_days": 366,
+   "coverage_evenness": 0.9259259259259259
+  },
+  "2023": {
+   "usable_analyses": 28,
+   "attempts": 53,
+   "usable_share": 0.5283018867924528,
+   "mean_staleness_days": 41.42138364779874,
+   "worst_staleness_days": 172,
+   "coverage_evenness": 0.9824561403508771
+  },
+  "2024": {
+   "usable_analyses": 20,
+   "attempts": 53,
+   "usable_share": 0.37735849056603776,
+   "mean_staleness_days": 57.40880503144654,
+   "worst_staleness_days": 211,
+   "coverage_evenness": 0.9803921568627451
+  },
+  "2025": {
+   "usable_analyses": 22,
+   "attempts": 53,
+   "usable_share": 0.41509433962264153,
+   "mean_staleness_days": 75.27672955974843,
+   "worst_staleness_days": 256,
+   "coverage_evenness": 0.983739837398374
+  }
+ },
+ "marginal_value_cost_aware": {
+  "2020": {
+   "usable_analyses": 20,
+   "attempts": 53,
+   "usable_share": 0.37735849056603776,
+   "mean_staleness_days": 69.75471698113208,
+   "worst_staleness_days": 240,
+   "coverage_evenness": 0.7575757575757576
+  },
+  "2021": {
+   "usable_analyses": 25,
+   "attempts": 53,
+   "usable_share": 0.4716981132075472,
+   "mean_staleness_days": 58.38364779874214,
+   "worst_staleness_days": 207,
+   "coverage_evenness": 0.7575757575757576
+  },
+  "2022": {
+   "usable_analyses": 5,
+   "attempts": 6,
+   "usable_share": 0.8333333333333334,
+   "mean_staleness_days": 162.96226415094338,
+   "worst_staleness_days": 380,
+   "coverage_evenness": 0.7575757575757576
+  },
+  "2023": {
+   "usable_analyses": 27,
+   "attempts": 53,
+   "usable_share": 0.5094339622641509,
+   "mean_staleness_days": 47.64150943396226,
+   "worst_staleness_days": 193,
+   "coverage_evenness": 0.8127090301003345
+  },
+  "2024": {
+   "usable_analyses": 20,
+   "attempts": 53,
+   "usable_share": 0.37735849056603776,
+   "mean_staleness_days": 63.056603773584904,
+   "worst_staleness_days": 220,
+   "coverage_evenness": 0.823045267489712
+  },
+  "2025": {
+   "usable_analyses": 22,
+   "attempts": 53,
+   "usable_share": 0.41509433962264153,
+   "mean_staleness_days": 92.66666666666667,
+   "worst_staleness_days": 352,
+   "coverage_evenness": 0.6157760814249363
+  }
+ }
+}

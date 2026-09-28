@@ -1,0 +1,36 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Node / build
+node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+
+# Runtime state (database, generated evidence, uploads)
+var/
+var-e2e/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Demo-pack rasters are distributed as a release asset (see data/README.md);
+# manifest, catalogues and vector files stay in git.
+data/demo_pack/*/scenes/
+data/demo_pack/*/worldcover_*.tif
+data/demo_pack.tar.gz

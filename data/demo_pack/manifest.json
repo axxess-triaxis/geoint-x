@@ -1,0 +1,427 @@
+{
+  "aois": {
+    "deepor_beel": {
+      "name": "Deepor Beel wetland, Guwahati",
+      "mode": "encroachment",
+      "bbox": [
+        91.595,
+        26.095,
+        91.705,
+        26.165
+      ],
+      "description": "Ramsar-listed freshwater wetland on the south-west edge of Guwahati, with a wildlife sanctuary inside it. Monitored for changes to water and wetland vegetation inside the mapped boundary and in a 200 m watch buffer around it.",
+      "grid": {
+        "epsg": 32646,
+        "origin_x": 359490.0,
+        "origin_y": 2894720.0,
+        "pixel_size": 10.0,
+        "width": 1109,
+        "height": 788
+      },
+      "scenes": [
+        {
+          "season": "2019-20",
+          "scene": {
+            "scene_id": "S2A_T46RCP_20200117T043313_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2020-01-17T04:41:19.398000Z",
+            "cloud_cover": 0.076791,
+            "aoi_valid_fraction": 0.9946,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RCP_20200117T043313_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "deepor_beel/scenes/S2A_T46RCP_20200117T043313_L2A.tif",
+          "sha256": "eba941f2250cac936299118b93de23848848731a85866c32245e06b2e881ec14"
+        },
+        {
+          "season": "2020-21",
+          "scene": {
+            "scene_id": "S2B_T46RCP_20210116T043417_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2021-01-16T04:41:25.158000Z",
+            "cloud_cover": 5.683276,
+            "aoi_valid_fraction": 0.9712,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RCP_20210116T043417_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "deepor_beel/scenes/S2B_T46RCP_20210116T043417_L2A.tif",
+          "sha256": "2ae44e88b9f1cb07904c5502cd514beedad270ec661526fafbc5d93eb1cd4903"
+        },
+        {
+          "season": "2021-22",
+          "scene": {
+            "scene_id": "S2A_T46RCP_20211227T043324_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2021-12-27T04:41:26.961000Z",
+            "cloud_cover": 2.848879,
+            "aoi_valid_fraction": 0.9941,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RCP_20211227T043324_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "deepor_beel/scenes/S2A_T46RCP_20211227T043324_L2A.tif",
+          "sha256": "3e61c2f4b7d62213401e945cee18db87d54123df2545cb83610cb24aea943321"
+        },
+        {
+          "season": "2022-23",
+          "scene": {
+            "scene_id": "S2A_T46RCP_20230111T043831_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2023-01-11T04:41:23.516000Z",
+            "cloud_cover": 3.655801,
+            "aoi_valid_fraction": 1.0,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RCP_20230111T043831_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "deepor_beel/scenes/S2A_T46RCP_20230111T043831_L2A.tif",
+          "sha256": "06977a4b01c37c7f0e2e79462ebdffe927f0cf244d12e8ec9f791d218b81778d"
+        },
+        {
+          "season": "2023-24",
+          "scene": {
+            "scene_id": "S2B_T46RCP_20240121T043428_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2024-01-21T04:41:24.744000Z",
+            "cloud_cover": 2.509384,
+            "aoi_valid_fraction": 0.9758,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RCP_20240121T043428_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "deepor_beel/scenes/S2B_T46RCP_20240121T043428_L2A.tif",
+          "sha256": "a9b592e47cfae3a5c27b90a92ef064e1a430731331e214e43e0ba06d26cf78db"
+        },
+        {
+          "season": "2024-25",
+          "scene": {
+            "scene_id": "S2B_T46RCP_20250115T043806_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2025-01-15T04:41:24.119000Z",
+            "cloud_cover": 4.932382,
+            "aoi_valid_fraction": 0.9918,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RCP_20250115T043806_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "deepor_beel/scenes/S2B_T46RCP_20250115T043806_L2A.tif",
+          "sha256": "5b54ea687bf3a6feddea650a84d11f90301d4bc5ae6330722daad4dbf3d2d31e"
+        },
+        {
+          "season": "2025-26",
+          "scene": {
+            "scene_id": "S2C_T46RCP_20260115T043522_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2026-01-15T04:41:26.419000Z",
+            "cloud_cover": 5.665854,
+            "aoi_valid_fraction": 0.9927,
+            "platform": "sentinel-2c",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2C_T46RCP_20260115T043522_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "deepor_beel/scenes/S2C_T46RCP_20260115T043522_L2A.tif",
+          "sha256": "fae13f21e2f340305f86ebd8eadf6d019d8ae9cc88efeca480bcd08d12084874"
+        }
+      ],
+      "worldcover": {
+        "2020": {
+          "file": "deepor_beel/worldcover_2020.tif",
+          "sha256": "2e1f5363171d10741697e0604dd7ec43b18b9ec7dbe6d3d95e3941fdda1d1166",
+          "source": "ESA WorldCover 10 m 2020 v100",
+          "license": "CC BY 4.0"
+        }
+      },
+      "polygons": "deepor_beel/polygons.geojson",
+      "catalog": "deepor_beel/catalog.json"
+    },
+    "north_guwahati": {
+      "name": "Amingaon - Changsari corridor, North Guwahati",
+      "mode": "lulc",
+      "bbox": [
+        91.62,
+        26.17,
+        91.74,
+        26.27
+      ],
+      "description": "Peri-urban corridor on the north bank of the Brahmaputra opposite Guwahati. Monitored for land-use / land-cover change: agricultural and vegetated land converting to bare or built-up surfaces.",
+      "grid": {
+        "epsg": 32646,
+        "origin_x": 362080.0,
+        "origin_y": 2906320.0,
+        "pixel_size": 10.0,
+        "width": 1211,
+        "height": 1120
+      },
+      "scenes": [
+        {
+          "season": "2019-20",
+          "scene": {
+            "scene_id": "S2A_T46RCQ_20200117T043313_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2020-01-17T04:41:04.955000Z",
+            "cloud_cover": 2.917419,
+            "aoi_valid_fraction": 0.9969,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RCQ_20200117T043313_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "north_guwahati/scenes/S2A_T46RCQ_20200117T043313_L2A.tif",
+          "sha256": "c4fcb672b9c0ff6d66e74e92288e1f7a453849448c7dd3d3363f63bc8c136ef1"
+        },
+        {
+          "season": "2020-21",
+          "scene": {
+            "scene_id": "S2B_T46RCQ_20210106T043409_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2021-01-06T04:41:09.948000Z",
+            "cloud_cover": 3.907223,
+            "aoi_valid_fraction": 0.995,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RCQ_20210106T043409_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "north_guwahati/scenes/S2B_T46RCQ_20210106T043409_L2A.tif",
+          "sha256": "9109b121e33eb6966150c91f7252fe26513574d15d8bd24255d0a29703a68cf9"
+        },
+        {
+          "season": "2021-22",
+          "scene": {
+            "scene_id": "S2A_T46RCQ_20211227T043324_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2021-12-27T04:41:12.549000Z",
+            "cloud_cover": 4.043178,
+            "aoi_valid_fraction": 0.996,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RCQ_20211227T043324_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "north_guwahati/scenes/S2A_T46RCQ_20211227T043324_L2A.tif",
+          "sha256": "044c178d93d28a7c66f29a17eaee5e4b8e5beda4949dfd9ce81d088092f0db60"
+        },
+        {
+          "season": "2022-23",
+          "scene": {
+            "scene_id": "S2A_T46RCQ_20230111T043831_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2023-01-11T04:41:09.104000Z",
+            "cloud_cover": 2.02862,
+            "aoi_valid_fraction": 0.9984,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RCQ_20230111T043831_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "north_guwahati/scenes/S2A_T46RCQ_20230111T043831_L2A.tif",
+          "sha256": "f02aaad90da5c0d7729c471e09af821e69fa48c20b82ebcc6abf799d165371bf"
+        },
+        {
+          "season": "2023-24",
+          "scene": {
+            "scene_id": "S2A_T46RCQ_20240126T043630_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2024-01-26T04:41:05.275000Z",
+            "cloud_cover": 11.795611,
+            "aoi_valid_fraction": 0.9727,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RCQ_20240126T043630_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "north_guwahati/scenes/S2A_T46RCQ_20240126T043630_L2A.tif",
+          "sha256": "a2ae5de3a85e14142d8962ae196a3df657dfed5f86b781a730603223e6a5b1a1"
+        },
+        {
+          "season": "2024-25",
+          "scene": {
+            "scene_id": "S2B_T46RCQ_20250115T043806_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2025-01-15T04:41:09.686000Z",
+            "cloud_cover": 0.140484,
+            "aoi_valid_fraction": 0.9968,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RCQ_20250115T043806_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "north_guwahati/scenes/S2B_T46RCQ_20250115T043806_L2A.tif",
+          "sha256": "5a3ff57053e6f7c97bf9554f0adb0478424b64c65a1876ef4b1cfc2ccc7e5cac"
+        },
+        {
+          "season": "2025-26",
+          "scene": {
+            "scene_id": "S2C_T46RCQ_20260115T043522_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2026-01-15T04:41:11.994000Z",
+            "cloud_cover": 2.684533,
+            "aoi_valid_fraction": 0.9965,
+            "platform": "sentinel-2c",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2C_T46RCQ_20260115T043522_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "north_guwahati/scenes/S2C_T46RCQ_20260115T043522_L2A.tif",
+          "sha256": "9f367460400badc1ed370a86624321fc448c3f6474d7c4a1944c35374ef9344d"
+        }
+      ],
+      "worldcover": {
+        "2020": {
+          "file": "north_guwahati/worldcover_2020.tif",
+          "sha256": "898c75d1d93cebaeffd11a265f81d1dcb39359e1eb104e8a6249dc7bf4e67802",
+          "source": "ESA WorldCover 10 m 2020 v100",
+          "license": "CC BY 4.0"
+        }
+      },
+      "polygons": null,
+      "catalog": "north_guwahati/catalog.json"
+    },
+    "majuli": {
+      "name": "Majuli river island, south bank",
+      "mode": "lulc",
+      "bbox": [
+        94.1,
+        26.88,
+        94.25,
+        26.98
+      ],
+      "description": "Part of Majuli, the Brahmaputra river island. Monitored for bank erosion and accretion (water to land and land to water change) and land-cover change.",
+      "grid": {
+        "epsg": 32646,
+        "origin_x": 609150.0,
+        "origin_y": 2984840.0,
+        "pixel_size": 10.0,
+        "width": 1501,
+        "height": 1123
+      },
+      "scenes": [
+        {
+          "season": "2019-20",
+          "scene": {
+            "scene_id": "S2A_T46RFQ_20200114T042841_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2020-01-14T04:30:59.276000Z",
+            "cloud_cover": 0.246243,
+            "aoi_valid_fraction": 1.0,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RFQ_20200114T042841_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "majuli/scenes/S2A_T46RFQ_20200114T042841_L2A.tif",
+          "sha256": "ad0690da4845b97661f0e63341283c10cd250ed7b802192d13609661905de340"
+        },
+        {
+          "season": "2020-21",
+          "scene": {
+            "scene_id": "S2A_T46RFQ_20210118T043020_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2021-01-18T04:31:05.916000Z",
+            "cloud_cover": 3.299558,
+            "aoi_valid_fraction": 0.9791,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RFQ_20210118T043020_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "majuli/scenes/S2A_T46RFQ_20210118T043020_L2A.tif",
+          "sha256": "557bd3bc54dfa29c3bdeafab6cf53b076068dfa03c11e63b9b02601cbec958d9"
+        },
+        {
+          "season": "2021-22",
+          "scene": {
+            "scene_id": "S2B_T46RFQ_20211219T042318_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2021-12-19T04:30:59.292000Z",
+            "cloud_cover": 0.000737,
+            "aoi_valid_fraction": 0.9999,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RFQ_20211219T042318_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "majuli/scenes/S2B_T46RFQ_20211219T042318_L2A.tif",
+          "sha256": "583b7ec5fc6dfd4425799cc42c3d195c312fa7890e02409853aa61ab622899ef"
+        },
+        {
+          "season": "2022-23",
+          "scene": {
+            "scene_id": "S2B_T46RFQ_20230113T042351_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2023-01-13T04:31:00.528000Z",
+            "cloud_cover": 7.696006,
+            "aoi_valid_fraction": 0.9878,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RFQ_20230113T042351_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "majuli/scenes/S2B_T46RFQ_20230113T042351_L2A.tif",
+          "sha256": "8ee7478f203aa287776eb75b80ab5798db1018ed341cba47d6db8c5481c71af3"
+        },
+        {
+          "season": "2023-24",
+          "scene": {
+            "scene_id": "S2B_T46RFQ_20240108T042410_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2024-01-08T04:31:04.135000Z",
+            "cloud_cover": 2.277096,
+            "aoi_valid_fraction": 0.9998,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RFQ_20240108T042410_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "majuli/scenes/S2B_T46RFQ_20240108T042410_L2A.tif",
+          "sha256": "9e63677fa91f5c65224dfe5d09dd72283beb6794e8c66d062e0f9ab6e5531654"
+        },
+        {
+          "season": "2024-25",
+          "scene": {
+            "scene_id": "S2A_T46RFQ_20250117T042117_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2025-01-17T04:31:03.575000Z",
+            "cloud_cover": 0.569507,
+            "aoi_valid_fraction": 0.9997,
+            "platform": "sentinel-2a",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2A_T46RFQ_20250117T042117_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "majuli/scenes/S2A_T46RFQ_20250117T042117_L2A.tif",
+          "sha256": "7c683076b070fef1684b7510c80d4977e67a2a0eb1c226b32e2dce4ffd28e18b"
+        },
+        {
+          "season": "2025-26",
+          "scene": {
+            "scene_id": "S2B_T46RFQ_20260117T042556_L2A",
+            "collection": "sentinel-2-c1-l2a",
+            "datetime": "2026-01-17T04:31:02.065000Z",
+            "cloud_cover": 0.020604,
+            "aoi_valid_fraction": 0.9998,
+            "platform": "sentinel-2b",
+            "source_href": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T46RFQ_20260117T042556_L2A",
+            "license": "Copernicus Sentinel data (free, full and open)"
+          },
+          "file": "majuli/scenes/S2B_T46RFQ_20260117T042556_L2A.tif",
+          "sha256": "b6a71c50be6256f0010e6c4883c5fdc2a24e2dcbb5c934196f743ebe074ab34b"
+        }
+      ],
+      "worldcover": {
+        "2020": {
+          "file": "majuli/worldcover_2020.tif",
+          "sha256": "b95580bb46bd18378dda3bd5f5cde713830cdde1e560ee3cb2782aebadb254d8",
+          "source": "ESA WorldCover 10 m 2020 v100",
+          "license": "CC BY 4.0"
+        }
+      },
+      "polygons": null,
+      "catalog": "majuli/catalog.json"
+    }
+  },
+  "districts": {
+    "file": "assam_districts.geojson",
+    "sha256": "d181735996b14a1b23c099f47b98a2f24e44afeaf81a7a28f9fb63d7500c18c9",
+    "source": "geoBoundaries IND ADM2 (Pathways Data Pvt. Ltd., lgdirectory.gov.in), filtered to Assam",
+    "license": "Open Data Commons Open Database License 1.0",
+    "year": "2021"
+  },
+  "built_at": "2026-09-28T07:40:18.901308+00:00",
+  "sources": {
+    "sentinel2": "https://earth-search.aws.element84.com/v1 collection sentinel-2-c1-l2a",
+    "sentinel2_license": "Copernicus Sentinel data, free, full and open",
+    "worldcover": "ESA WorldCover 10 m 2020 v100 (CC BY 4.0)",
+    "boundaries": "OpenStreetMap contributors (ODbL); not official records"
+  },
+  "note": "Frozen demo pack: real Sentinel-2 observations captured on the date above. Not real-time. Rebuild with scripts/build_demo_pack.py."
+}
