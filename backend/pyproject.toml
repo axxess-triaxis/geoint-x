@@ -56,3 +56,10 @@ ignore_missing_imports = true
 # Prompt text is kept verbatim on long lines.
 "src/geointx/ai/*.py" = ["E501"]
 "src/geointx/agent/strategy.py" = ["E501"]
+
+# Vercel (serverless) deployment with Root Directory = backend. See server.py.
+[tool.vercel]
+entrypoint = "server:app"
+
+[tool.vercel.scripts]
+build = "python vercel_build.py"

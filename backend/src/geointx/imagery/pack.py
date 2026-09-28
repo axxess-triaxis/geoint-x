@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
+from collections.abc import Callable
 from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
@@ -90,8 +92,14 @@ def write_single(path: Path, grid: GridSpec, arr: NDArray[np.uint8]) -> str:
 
 
 class DemoPack:
-    def __init__(self, root: Path) -> None:
+    def __init__(
+        self, root: Path, raster_fetcher: Callable[[DemoPack], None] | None = None
+    ) -> None:
         self.root = root
+        # Called once when a raster is missing (e.g. serverless cold start): it must
+        # place the rasters under ``root`` and verify them against the manifest.
+        self._fetcher = raster_fetcher
+        self._fetch_lock = threading.Lock()
         self.manifest: dict[str, Any] = json.loads((root / "manifest.json").read_text("utf-8"))
 
     @property
@@ -107,10 +115,18 @@ class DemoPack:
     def scenes(self, aoi_id: str) -> list[SceneRef]:
         return [SceneRef.model_validate(s["scene"]) for s in self.aoi(aoi_id)["scenes"]]
 
+    def raster_path(self, rel: str) -> Path:
+        path = self.root / rel
+        if not path.exists() and self._fetcher is not None:
+            with self._fetch_lock:
+                if not path.exists():
+                    self._fetcher(self)
+        return path
+
     def load_observation(self, aoi_id: str, scene_id: str) -> Observation:
         entry = next(s for s in self.aoi(aoi_id)["scenes"] if s["scene"]["scene_id"] == scene_id)
         grid = self.grid(aoi_id)
-        with rasterio.open(self.root / entry["file"]) as src:
+        with rasterio.open(self.raster_path(entry["file"])) as src:
             data = src.read()
         dn = dict(zip(PACK_BANDS, data, strict=True))
         valid = valid_from_scl(dn["scl"]) & (dn["red"] > 0)
@@ -123,7 +139,7 @@ class DemoPack:
         rel = self.aoi(aoi_id).get("worldcover", {}).get("2020")
         if not rel:
             return None
-        with rasterio.open(self.root / rel["file"]) as src:
+        with rasterio.open(self.raster_path(rel["file"])) as src:
             return src.read(1).astype(np.uint8)
 
     def load_polygons(self, aoi_id: str) -> list[MonitoredPolygon]:

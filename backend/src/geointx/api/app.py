@@ -27,6 +27,7 @@ from geointx.cases.audit import verify_chain
 from geointx.geo.grid import GridSpec
 from geointx.imagery import render
 from geointx.imagery.pack import DemoPack
+from geointx.imagery.release_fetch import fetch_rasters
 from geointx.models import Finding, PriorityResult, Role
 from geointx.services import (
     add_polygon,
@@ -74,14 +75,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     s = settings or get_settings()
     STATE.settings = s
     STATE.engine = make_engine(s.database_url)
-    STATE.pack = DemoPack(s.pack_dir)
+    STATE.pack = DemoPack(s.pack_dir, fetch_rasters if s.pack_autofetch else None)
     STATE.llm = build_client(s.gemini_api_key, s.gemini_model, s.gemini_timeout_s, s.ai_enabled)
     seed_from_pack(STATE.engine, STATE.pack)
     s.artifact_dir.mkdir(parents=True, exist_ok=True)
     s.upload_dir.mkdir(parents=True, exist_ok=True)
 
     app = FastAPI(title="GEOINT-X", version="0.1.0")
-    app.mount("/artifacts", StaticFiles(directory=s.artifact_dir), name="artifacts")
+
+    # A route, not a StaticFiles mount: evidence is generated at runtime, so it must
+    # never be treated as build-time static content (e.g. promoted to a CDN).
+    @app.get("/artifacts/{run_id}/{name}", include_in_schema=False)
+    def artifact(run_id: str, name: str) -> FileResponse:
+        root = s.artifact_dir.resolve()
+        p = (root / run_id / name).resolve()
+        if root not in p.parents or not p.is_file():
+            raise HTTPException(404)
+        return FileResponse(p, headers={"Cache-Control": "public, max-age=31536000, immutable"})
+
     _register(app)
     if s.frontend_dist.exists():
         app.mount("/assets", StaticFiles(directory=s.frontend_dist / "assets"), name="assets")

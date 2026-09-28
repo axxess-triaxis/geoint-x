@@ -34,3 +34,7 @@ var-e2e/
 data/demo_pack/*/scenes/
 data/demo_pack/*/worldcover_*.tif
 data/demo_pack.tar.gz
+
+# Vercel build output
+backend/_bundle/
+.vercel/

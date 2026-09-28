@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     var_dir: Path = REPO_ROOT / "var"
     db_url: str | None = None
     frontend_dist: Path = REPO_ROOT / "frontend" / "dist"
+    # Download missing demo-pack rasters from the GitHub release on first use.
+    pack_autofetch: bool = False
 
     # GenAI (optional). Without a key the system uses deterministic templates.
     gemini_api_key: str | None = None
