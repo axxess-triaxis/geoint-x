@@ -33,6 +33,32 @@ BUNDLE = HERE / "_bundle"
 ON_VERCEL = bool(os.environ.get("VERCEL"))
 
 
+def _preload_vendored_libs() -> None:
+    """Load system libraries vendored at build time (e.g. libexpat for GDAL).
+
+    Loaded with RTLD_GLOBAL before rasterio is imported, so the dynamic linker
+    finds them by soname. Retries in passes so inter-dependencies resolve in
+    any order.
+    """
+    import ctypes
+
+    pending = sorted((BUNDLE / "lib").glob("*.so*")) if (BUNDLE / "lib").is_dir() else []
+    while pending:
+        failed = []
+        for lib in pending:
+            try:
+                ctypes.CDLL(str(lib), mode=ctypes.RTLD_GLOBAL)
+            except OSError:
+                failed.append(lib)
+        if len(failed) == len(pending):
+            log.warning("could not preload vendored libs: %s", [p.name for p in failed])
+            return
+        pending = failed
+
+
+_preload_vendored_libs()
+
+
 def _settings():  # type: ignore[no-untyped-def]
     from geointx.settings import Settings
 
