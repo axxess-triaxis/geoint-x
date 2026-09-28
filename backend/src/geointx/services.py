@@ -9,6 +9,7 @@ from typing import Any
 
 from shapely.geometry import box, shape
 from sqlalchemy.engine import Engine
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, func, select
 
 from geointx.cases import triage, workflow
@@ -77,7 +78,11 @@ def seed_from_pack(engine: Engine, pack: DemoPack) -> None:
                         buffer_m=float(p.get("buffer_m", 200.0)),
                     )
                 )
-        s.commit()
+        try:
+            s.commit()
+        except IntegrityError:
+            # Another instance seeded concurrently (shared Postgres): its rows win.
+            s.rollback()
 
 
 # --------------------------------------------------------------------------- polygons

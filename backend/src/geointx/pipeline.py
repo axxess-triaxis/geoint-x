@@ -176,21 +176,9 @@ def run_detection(
             )
         ]
         if tc1 is not None and tc2 is not None and artifact_dir is not None:
-            r0, r1, c0, c1 = render.crop_window(m)
-            outline = render.region_outline_rgba(m[r0:r1, c0:c1])
-            crops = (
-                ("image_before", tc1[r0:r1, c0:c1], "before", "T1 true colour (crop)"),
-                ("image_after", tc2[r0:r1, c0:c1], "after", "T2 true colour (crop)"),
-                (
-                    "change_mask",
-                    render.overlay(tc2[r0:r1, c0:c1], outline),
-                    "mask",
-                    "Detected region outlined on T2",
-                ),
-            )
-            for kind, arr, stem, desc in crops:
+            for kind, arr, stem, desc in render.finding_crops(tc1, tc2, m):
                 name = f"{fid}_{stem}.png"
-                sha = render.write_png(arr, artifact_dir / name, upscale=3)
+                sha = render.write_png(arr, artifact_dir / name, upscale=render.CROP_UPSCALE)
                 evidence.append(
                     EvidenceItem(
                         id=f"{fid}:{stem}",
