@@ -90,13 +90,24 @@ class GeminiClient:
         raise LlmUnavailable(f"gemini unavailable: {str(last_err)[:300]}")
 
 
+# Why the LLM is (not) available, for operators. Never contains the key.
+STATUS: dict[str, str] = {"status": "not initialised"}
+
+
 def build_client(
     api_key: str | None, model: str, timeout_s: float, enabled: bool
 ) -> LlmClient | None:
-    if not enabled or not api_key:
+    if not enabled:
+        STATUS["status"] = "disabled by configuration"
+        return None
+    if not (api_key and api_key.strip()):
+        STATUS["status"] = "no API key (variable missing or empty)"
         return None
     try:
-        return GeminiClient(api_key, model, timeout_s)
-    except Exception as e:  # pragma: no cover - import/config failure
+        client = GeminiClient(api_key.strip(), model, timeout_s)
+    except Exception as e:  # import/config failure
         log.warning("could not initialise Gemini client: %s", e)
+        STATUS["status"] = f"client failed to start: {type(e).__name__}: {str(e)[:160]}"
         return None
+    STATUS["status"] = "ready"
+    return client
