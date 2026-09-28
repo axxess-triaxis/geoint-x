@@ -487,7 +487,8 @@ def _register(app: FastAPI) -> None:
         district: str | None = None,
         transition: str | None = None,
     ) -> dict[str, Any]:
-        q = select(CaseRow)
+        # One joined query (the database may be a network hop away).
+        q = select(CaseRow, FindingRow).where(CaseRow.finding_id == FindingRow.id)
         for col, val in (
             (CaseRow.status, status),
             (CaseRow.priority_band, band),
@@ -497,10 +498,8 @@ def _register(app: FastAPI) -> None:
         ):
             if val:
                 q = q.where(col == val)
-        rows = sorted(ses.exec(q).all(), key=lambda c: -c.priority_score)
-        feats = []
-        for c in rows:
-            feats.append(_feature(c, _finding(ses, c.finding_id)))
+        rows = sorted(ses.exec(q).all(), key=lambda cf: -cf[0].priority_score)
+        feats = [_feature(c, Finding.model_validate(f.payload)) for c, f in rows]
         return {"type": "FeatureCollection", "features": feats}
 
     @app.get("/api/cases/{case_id}")
