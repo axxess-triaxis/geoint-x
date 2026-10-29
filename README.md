@@ -146,3 +146,11 @@ region `syd1`, and Large Functions on.
 
 Licence: MIT © 2026 Triaxis Ventures Private Limited. Data licences are listed in
 [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
+
+## Built by Triaxis Ventures
+
+Built by [Triaxis Ventures Private Limited](https://github.com/axxess-triaxis), whose product is
+[AXXESS TRIaxis](https://github.com/axxess-triaxis/AXXESSTRIAXIS). This is a government-challenge build, live at https://geoint-x.vercel.app (200 on 2026-10-29), separate
+from the Triaxis product stack ([PORT4LLEO](https://github.com/axxess-triaxis/port4lleo),
+[Callismatic](https://github.com/axxess-triaxis/callismatic),
+[Omnidamus](https://github.com/axxess-triaxis/Omnidamus), [STILL](https://github.com/axxess-triaxis/STILL)).
